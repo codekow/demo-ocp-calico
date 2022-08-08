@@ -15,14 +15,12 @@ setup_bin() {
 check_ocp_install() {
   which openshift-install 2>&1 >/dev/null || setup_bin
   echo "auto-complete: . <\$(openshift-install completion bash)"
+  openshift-install version
 }
 
 download_ocp_install() {
   DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.10/openshift-install-linux.tar.gz
   curl "${DOWNLOAD_URL}" -L | tar vzx -C ${TMP_DIR}/bin openshift-install
-
-  openshift-install version
-  
 }
 
 calico_init_install() {
