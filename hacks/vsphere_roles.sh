@@ -38,8 +38,8 @@ echo "
 read_login() {
   
 if [ ! "${GOVC_URL}x" == "x" ]; then
-  echo \$GOVC_URL already set
   print_usage
+  echo 'run: "unset GOVC_URL" to reset login'
 else
   GOVC_URL=10.1.2.3
   GOVC_USERNAME=Administrator
