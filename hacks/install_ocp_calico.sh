@@ -29,6 +29,8 @@ calico_init_install() {
     cd ${INSTALL_DIR}
     
     [ -e install-config.yaml ] || openshift-install create install-config
+
+    [ -e install-config.yaml ] || exit
 }
 
 calico_update_sdn() {
