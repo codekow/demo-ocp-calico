@@ -1,7 +1,7 @@
 #!/bin/bash
 # see https://projectcalico.docs.tigera.io/getting-started/windows-calico/openshift/installation
 
-INSTALL_DIR=openshift-tigera-install
+INSTALL_DIR=ocp-calico-install
 TMP_DIR=$(pwd)/generated
 
 setup_bin() {
