@@ -1,0 +1,111 @@
+#!/bin/bash
+# see https://projectcalico.docs.tigera.io/getting-started/windows-calico/openshift/installation
+
+INSTALL_DIR=openshift-tigera-install
+TMP_DIR=$(pwd)/generated
+
+setup_bin() {
+  mkdir -p ${TMP_DIR}/bin
+  echo ${PATH} | grep -q "${TMP_DIR}/bin" || \
+    export PATH=${TMP_DIR}/bin:$PATH
+
+  download_ocp_install
+}
+
+check_ocp_install() {
+  which openshift-install 2>&1 >/dev/null || setup_bin
+  echo "auto-complete: . <\$(openshift-install completion bash)"
+}
+
+download_ocp_install() {
+  DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.10/openshift-install-linux.tar.gz
+  curl "${DOWNLOAD_URL}" -L | tar vzx -C ${TMP_DIR}/bin openshift-install
+
+  openshift-install version
+  
+}
+
+calico_init_install() {
+    cd ${TMP_DIR}
+    [ ! -d ${INSTALL_DIR} ] && mkdir ${INSTALL_DIR}
+    cd ${INSTALL_DIR}
+    
+    [ -e install-config.yaml ] || openshift-install create install-config
+}
+
+calico_update_sdn() {
+  sed -i 's/OpenShiftSDN/Calico/' install-config.yaml
+  cp install-config.yaml ../install-config.yaml-$(date +%s)
+}
+
+calico_download_manifests() {
+  openshift-install create manifests
+
+  [ ! -d manifests ] && mkdir manifests
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/01-crd-apiserver.yaml -o manifests/01-crd-apiserver.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/01-crd-installation.yaml -o manifests/01-crd-installation.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/01-crd-imageset.yaml -o manifests/01-crd-imageset.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/01-crd-tigerastatus.yaml -o manifests/01-crd-tigerastatus.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_bgpconfigurations.yaml -o manifests/crd.projectcalico.org_bgpconfigurations.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_bgppeers.yaml -o manifests/crd.projectcalico.org_bgppeers.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_blockaffinities.yaml -o manifests/crd.projectcalico.org_blockaffinities.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_caliconodestatuses.yaml -o manifests/crd.projectcalico.org_caliconodestatuses.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_clusterinformations.yaml -o manifests/crd.projectcalico.org_clusterinformations.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_felixconfigurations.yaml -o manifests/crd.projectcalico.org_felixconfigurations.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_globalnetworkpolicies.yaml -o manifests/crd.projectcalico.org_globalnetworkpolicies.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_globalnetworksets.yaml -o manifests/crd.projectcalico.org_globalnetworksets.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_hostendpoints.yaml -o manifests/crd.projectcalico.org_hostendpoints.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_ipamblocks.yaml -o manifests/crd.projectcalico.org_ipamblocks.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_ipamconfigs.yaml -o manifests/crd.projectcalico.org_ipamconfigs.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_ipamhandles.yaml -o manifests/crd.projectcalico.org_ipamhandles.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_ippools.yaml -o manifests/crd.projectcalico.org_ippools.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_ipreservations.yaml -o manifests/crd.projectcalico.org_ipreservations.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_kubecontrollersconfigurations.yaml -o manifests/crd.projectcalico.org_kubecontrollersconfigurations.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_networkpolicies.yaml -o manifests/crd.projectcalico.org_networkpolicies.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/crds/calico/crd.projectcalico.org_networksets.yaml -o manifests/crd.projectcalico.org_networksets.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/tigera-operator/00-namespace-tigera-operator.yaml -o manifests/00-namespace-tigera-operator.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/tigera-operator/02-rolebinding-tigera-operator.yaml -o manifests/02-rolebinding-tigera-operator.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/tigera-operator/02-role-tigera-operator.yaml -o manifests/02-role-tigera-operator.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/tigera-operator/02-serviceaccount-tigera-operator.yaml -o manifests/02-serviceaccount-tigera-operator.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/tigera-operator/02-configmap-calico-resources.yaml -o manifests/02-configmap-calico-resources.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/tigera-operator/02-tigera-operator.yaml -o manifests/02-tigera-operator.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/01-cr-installation.yaml -o manifests/01-cr-installation.yaml
+  curl https://projectcalico.docs.tigera.io/manifests/ocp/01-cr-apiserver.yaml -o manifests/01-cr-apiserver.yaml
+}
+
+calico_create_cr_vxlan() {
+
+echo "
+kind: Installation
+metadata:
+  name: default
+spec:
+  variant: Calico
+  calicoNetwork:
+    bgp: Disabled
+    ipPools:
+    - blockSize: 26
+      cidr: 10.128.0.0/14
+      encapsulation: VXLAN
+      natOutgoing: Enabled
+      nodeSelector: all()
+" > manifests/01-cr-installation.yaml
+
+}
+
+calico_backup_install() {
+  cd ..
+  [ ! -d install-backup ] && cp -a ${INSTALL_DIR} install-backup
+}
+
+calico_print_install() {
+  echo "openshift-install create cluster --dir $(pwd)" 
+}
+
+check_ocp_install
+calico_init_install
+calico_update_sdn
+calico_download_manifests
+calico_create_cr_vxlan
+calico_backup_install
+calico_print_install
