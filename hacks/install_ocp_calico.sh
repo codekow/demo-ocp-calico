@@ -16,6 +16,7 @@ check_ocp_install() {
   which openshift-install 2>&1 >/dev/null || setup_bin
   echo "auto-complete: . <\$(openshift-install completion bash)"
   openshift-install version
+  sleep 5
 }
 
 download_ocp_install() {
