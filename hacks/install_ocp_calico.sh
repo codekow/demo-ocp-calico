@@ -95,7 +95,7 @@ spec:
 
 calico_backup_install() {
   cd ..
-  [ ! -d install-backup ] && cp -a ${INSTALL_DIR} install-backup
+  [ ! -d install-$(date +%s) ] && cp -a ${INSTALL_DIR} install-$(date +%s)
 }
 
 calico_print_install() {
