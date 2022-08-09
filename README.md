@@ -34,7 +34,8 @@ openshift-portgroup-level | False | Port Group
 ReadOnly | True | Virtual Machine folder (Top Level)
 openshift-folder-level | True | Virtual Machine folder
 
-In a cascading folder organization you will need  "`Read-only`" permissions with "`Propagate to children`" from the top folder level.
+In a cascading (nested) folder organization you will need  "`Read-only`" permissions 
+with "`Propagate to children`" from the top folder level.
 
 ![Folder Tree Example](docs/folder-permissions.png)
 
