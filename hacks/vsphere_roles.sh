@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# https://docs.openshift.com/container-platform/4.10/installing/installing_vsphere/installing-vsphere-installer-provisioned.html#installation-vsphere-installer-infra-requirements_installing-vsphere-installer-provisioned
+
 VSPHERE_ROLES='
   openshift-vcenter-level
   openshift-cluster-level
+  openshift-resource-pool-level
   openshift-datastore-level
   openshift-portgroup-level
   openshift-folder-level
