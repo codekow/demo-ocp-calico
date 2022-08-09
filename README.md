@@ -1,17 +1,50 @@
-# OpenShift 4 Calico (Windows) Install
+# OpenShift 4.4+ Calico (Windows) Install
 
-## Quickstart
+This repository helps automate the install of OpenShift 4.x
+with Calico CNI for use with Windows containers
+
+Note: Running these scripts on a Linux workstation with internet access is assumed
+
+## QuickStart
 ```
-# setup vmware roles
-. hacks/vsphere_roles.sh
+# pull this repo
+git clone https://github.com/codekow/demo-ocp-calico.git
+cd demo-ocp-calico
 
-# easy button
+# setup vmware roles (optional)
+. hacks/vsphere_roles.sh
+vsphere_create_roles
+
+# easy install button :)
 hacks/install_ocp_calico.sh
 ```
 
-## Links
-- https://projectcalico.docs.tigera.io/getting-started/windows-calico/openshift/installation
-- https://docs.tigera.io/getting-started/openshift/installation
-- https://docs.tigera.io/maintenance/openshift-upgrade
+## VMware Notes
 
-- https://docs.openshift.com/container-platform/4.10/networking/ovn_kubernetes_network_provider/configuring-hybrid-networking.html
+### Precreated virtual machine folder in vSphere vCenter
+
+Role Name | Propagate | Entity
+--- | --- | ---
+openshift-vcenter-level | False | vCenter
+ReadOnly | False | Datacenter
+openshift-cluster-level | True | Cluster
+openshift-datastore-level | False | Datastore
+ReadOnly | False | Switch
+openshift-portgroup-level | False | Port Group
+ReadOnly | True | Virtual Machine folder (Top Level)
+openshift-folder-level | True | Virtual Machine folder
+
+In a cascading folder organization you will need  "`Read-only`" permissions with "`Propagate to children`" from the top folder level.
+
+![Folder Tree Example](docs/folder-permissions.png)
+
+## Links
+
+Tigera Docs
+- [OpenShift 4.x Calico Install (Windows)](https://projectcalico.docs.tigera.io/getting-started/windows-calico/openshift/installation)
+- [OpenShift 4.x Calico Install](https://docs.tigera.io/getting-started/openshift/installation)
+- [OpenShift 4.x Calico Enterprise Upgrade](https://docs.tigera.io/maintenance/openshift-upgrade)
+
+OpenShift Docs
+- [OpenShift 4.10 OVN Hybrid Networking](https://docs.openshift.com/container-platform/4.10/networking/ovn_kubernetes_network_provider/configuring-hybrid-networking.html)
+- [vCenter Account Priviledges](https://docs.openshift.com/container-platform/4.10/installing/installing_vsphere/installing-vsphere-installer-provisioned.html#installation-vsphere-installer-infra-requirements_installing-vsphere-installer-provisioned)
