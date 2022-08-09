@@ -17,9 +17,24 @@ vsphere_create_roles
 
 # easy install button :)
 hacks/install_ocp_calico.sh
+
+# run openshift-install
+openshift-install create cluster --dir generated/ocp-calico-install
 ```
 
 ## VMware Notes
+
+Assumption: Two vCenter Accounts
+- Admin Account
+- Installer Account (w/ roles assigned)
+
+### Admin Account
+
+`hacks/vsphere_roles.sh` is available to help automate the creation of vCenter roles with a vCenter administrator account.
+
+### Installer Account
+
+Assign the following roles to the vCenter account being used to install OpenShift at various levels in vCenter listed below.
 
 ### Precreated virtual machine folder in vSphere vCenter
 
@@ -37,7 +52,12 @@ openshift-folder-level | True | Virtual Machine folder
 In a cascading (nested) folder organization you will need  "`Read-only`" permissions 
 with "`Propagate to children`" from the top folder level.
 
+Example Service Account: `OCPInstaller`
+
 ![Folder Tree Example](docs/folder-permissions.png)
+
+## ToDO
+- Convert hacks to Ansible
 
 ## Links
 
