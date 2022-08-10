@@ -77,6 +77,7 @@ calico_download_manifests() {
 calico_create_cr_vxlan() {
 
 echo "
+apiVersion: operator.tigera.io/v1
 kind: Installation
 metadata:
   name: default
