@@ -24,6 +24,19 @@ openshift-install create cluster --dir generated/ocp-calico-install
 
 ## VMware Notes
 
+Add vSphere folder path to `install-config.yml` at the following level in the yaml
+```
+platform:
+  vsphere:
+    
+    # example folder path
+    # folder: /${{ datacenter }}/vm/${{ folder path}}
+    folder: /Central/vm/Sandbox/ocp4.tigerlab.io
+
+    vcenter: 10.1.2.3
+    ...
+```
+
 Assumption: Two vCenter Accounts
 - Admin Account
 - Installer Account (w/ roles assigned)
