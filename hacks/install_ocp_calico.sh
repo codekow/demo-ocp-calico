@@ -4,6 +4,7 @@
 
 INSTALL_DIR=ocp-calico-install
 TMP_DIR=generated
+unset KUBECONFIG
 
 setup_bin() {
   mkdir -p ${TMP_DIR}/bin
