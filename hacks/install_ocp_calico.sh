@@ -1,5 +1,6 @@
 #!/bin/bash
 # see https://projectcalico.docs.tigera.io/getting-started/windows-calico/openshift/installation
+# set -x
 
 INSTALL_DIR=ocp-calico-install
 TMP_DIR=$(pwd)/generated
@@ -117,6 +118,7 @@ calico_print_install() {
 
 setup_bin
 check_ocp_install
+check_oc
 calico_init_install
 calico_update_sdn
 calico_download_manifests
