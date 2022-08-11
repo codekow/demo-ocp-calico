@@ -13,14 +13,16 @@ setup_bin() {
 
 check_ocp_install() {
   which openshift-install 2>&1 >/dev/null || download_ocp_install
-  echo "auto-complete: . <\$(openshift-install completion bash)"
+  echo "auto-complete: . <\(openshift-install completion bash)"
+  . <(openshift-install completion bash)
   openshift-install version
   sleep 5
 }
 
 check_oc() {
   which oc 2>&1 >/dev/null || download_oc
-  echo "auto-complete: . <\$(oc completion bash)"
+  echo "auto-complete: . <\(oc completion bash)"
+  . <(oc completion bash)
   oc version
   sleep 5
 }
