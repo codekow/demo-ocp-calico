@@ -3,7 +3,7 @@
 # set -x
 
 INSTALL_DIR=ocp-calico-install
-TMP_DIR=$(pwd)/generated
+TMP_DIR=generated
 
 setup_bin() {
   mkdir -p ${TMP_DIR}/bin
