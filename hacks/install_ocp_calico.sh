@@ -115,10 +115,11 @@ calico_backup_install() {
   [ ! -d install-$(date +%s) ] && cp -a ${INSTALL_DIR} install-$(date +%s)
 }
 
-calico_print_install() {
+calico_print_cmd() {
+  cd ..
   echo "${TMP_DIR}/bin/openshift-install create cluster --dir ${TMP_DIR}/${INSTALL_DIR}"
-  echo "export KUBECONFIG=${TMP_DIR}/${INSTALL_DIR}/auth/kubeconfig"
-  export KUBECONFIG=${TMP_DIR}/${INSTALL_DIR}/auth/kubeconfig
+  echo "export KUBECONFIG=\$(pwd)/${TMP_DIR}/${INSTALL_DIR}/auth/kubeconfig"
+  export KUBECONFIG=$(pwd)/${TMP_DIR}/${INSTALL_DIR}/auth/kubeconfig
 }
 
 setup_bin
@@ -129,4 +130,4 @@ calico_update_sdn
 calico_download_manifests
 calico_create_cr_vxlan
 calico_backup_install
-calico_print_install
+calico_print_cmd
