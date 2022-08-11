@@ -113,7 +113,9 @@ calico_backup_install() {
 }
 
 calico_print_install() {
-  echo "openshift-install create cluster --dir $(pwd)" 
+  echo "${TMP_DIR}/bin/openshift-install create cluster --dir ${TMP_DIR}/${INSTALL_DIR}"
+  echo "export KUBECONFIG=${TMP_DIR}/${INSTALL_DIR}/auth/kubeconfig"
+  export KUBECONFIG=${TMP_DIR}/${INSTALL_DIR}/auth/kubeconfig
 }
 
 setup_bin
