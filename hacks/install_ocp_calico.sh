@@ -8,14 +8,19 @@ setup_bin() {
   mkdir -p ${TMP_DIR}/bin
   echo ${PATH} | grep -q "${TMP_DIR}/bin" || \
     export PATH=${TMP_DIR}/bin:$PATH
-
-  download_ocp_install
 }
 
 check_ocp_install() {
-  which openshift-install 2>&1 >/dev/null || setup_bin
+  which openshift-install 2>&1 >/dev/null || download_ocp_install
   echo "auto-complete: . <\$(openshift-install completion bash)"
   openshift-install version
+  sleep 5
+}
+
+check_oc() {
+  which oc 2>&1 >/dev/null || download_oc
+  echo "auto-complete: . <\$(oc completion bash)"
+  oc version
   sleep 5
 }
 
@@ -23,6 +28,12 @@ download_ocp_install() {
   DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.10/openshift-install-linux.tar.gz
   curl "${DOWNLOAD_URL}" -L | tar vzx -C ${TMP_DIR}/bin openshift-install
 }
+
+download_oc() {
+  DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.10/openshift-client-linux.tar.gz
+  curl "${DOWNLOAD_URL}" -L | tar vzx -C ${TMP_DIR}/bin oc
+}
+
 
 calico_init_install() {
     cd ${TMP_DIR}
@@ -104,6 +115,7 @@ calico_print_install() {
   echo "openshift-install create cluster --dir $(pwd)" 
 }
 
+setup_bin
 check_ocp_install
 calico_init_install
 calico_update_sdn
