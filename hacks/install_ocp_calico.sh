@@ -9,7 +9,7 @@ unset KUBECONFIG
 setup_bin() {
   mkdir -p ${TMP_DIR}/bin
   echo ${PATH} | grep -q "${TMP_DIR}/bin" || \
-    export PATH=${TMP_DIR}/bin:$PATH
+    export PATH=$(pwd)/${TMP_DIR}/bin:$PATH
 }
 
 check_ocp_install() {
