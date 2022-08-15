@@ -15,6 +15,10 @@ cd demo-ocp-calico
 . hacks/vsphere_roles.sh
 vsphere_create_roles
 
+# copy existing install-config.yml into install folder (optional)
+mkdir -p generated/ocp-calico-install
+cp install-config.yaml generated/ocp-calico-install/
+
 # easy install button :)
 hacks/install_ocp_calico.sh
 
