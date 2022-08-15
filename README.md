@@ -41,6 +41,8 @@ platform:
     ...
 ```
 
+See [install-config-vsphere.yaml.j2](conf/install-config-vsphere.yaml.j2) for common vSphere options.
+
 Assumption: Two vCenter Accounts
 - Admin Account
 - Installer Account (w/ roles assigned)
